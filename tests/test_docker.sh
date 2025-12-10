@@ -58,6 +58,7 @@ docker compose -f docker-compose.local.yml run --rm \
   -e DJANGO_ADMIN_URL=x \
   -e MAILGUN_API_KEY=x \
   -e MAILGUN_DOMAIN=x \
+  -e SENTRY_DSN=https://x@x.ingest.sentry.io/x \
   django python manage.py check --settings=config.settings.production --deploy --database default --fail-level WARNING
 
 # Generate the HTML for the documentation
@@ -76,6 +77,7 @@ docker run --rm \
 -e DJANGO_ADMIN_URL=x \
 -e MAILGUN_API_KEY=x \
 -e MAILGUN_DOMAIN=x \
+-e SENTRY_DSN=https://x@x.ingest.sentry.io/x \
 django-prod python manage.py check --settings=config.settings.production --deploy --database default --fail-level WARNING
 
 # Run pnpm build script if package.json is present
