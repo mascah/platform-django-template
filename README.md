@@ -1,3 +1,75 @@
 # Cookiecutter Turbo Django
 
-Heavily inspired by [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django)
+[![Build Status](https://github.com/mascah/cookiecutter-turbo-django/actions/workflows/ci.yml/badge.svg)](https://github.com/mascah/cookiecutter-turbo-django/actions)
+[![Documentation Status](https://readthedocs.org/projects/cookiecutter-turbo-django/badge/?version=latest)](https://cookiecutter-turbo-django.readthedocs.io/)
+[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/)
+[![Django 5.2](https://img.shields.io/badge/django-5.2-green.svg)](https://www.djangoproject.com/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+A [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template for building production-ready **modular monolith** Django applications with modern frontend tooling. Get the operational simplicity of a single deployable unit with the organizational clarity of well-defined domain boundaries.
+
+Heavily inspired by [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django).
+
+## Features
+
+- **Modular monolith architecture** - Domain-driven Django apps with event-driven communication
+- **Django 5.2 + Python 3.13** - Latest stable versions with uv for fast dependency management
+- **Turborepo + pnpm workspaces** - React SPA and Astro landing page with shared UI components
+- **Docker-first development** - PostgreSQL, Redis, and all services containerized
+- **Production-ready defaults** - Sentry, structured logging, type checking with mypy
+- **Optional integrations** - Django REST Framework with OpenAPI, Celery task queue, async/ASGI support, Heroku deployment
+
+## Quick Start
+
+```bash
+# Install cookiecutter
+pip install cookiecutter
+
+# Generate your project
+cookiecutter gh:mascah/cookiecutter-turbo-django
+
+# Follow the prompts, then see your generated project's README
+```
+
+## Documentation
+
+Full documentation is available at **[cookiecutter-turbo-django.readthedocs.io](https://cookiecutter-turbo-django.readthedocs.io/)**
+
+- [Why This Template?](https://cookiecutter-turbo-django.readthedocs.io/en/latest/0-introduction/why-this-template-cited.html) - The modular monolith philosophy
+- [Project Generation Options](https://cookiecutter-turbo-django.readthedocs.io/en/latest/1-getting-started/project-generation-options.html) - All template configuration options
+- [Local Development](https://cookiecutter-turbo-django.readthedocs.io/en/latest/2-local-development/developing-locally-docker.html) - Docker-based development workflow
+- [Deployment](https://cookiecutter-turbo-django.readthedocs.io/en/latest/3-deployment/deployment-on-heroku.html) - Heroku and AWS deployment guides
+
+## Generated Project Structure
+
+```
+my_project/
+├── apps/                    # Frontend applications (Turborepo workspaces)
+│   ├── landing/             # Astro static site
+│   └── my_project/          # Vite + React SPA
+├── packages/                # Shared frontend packages
+│   ├── ui/                  # Shared React components (Radix UI)
+│   ├── eslint-config/       # Shared ESLint config
+│   └── typescript-config/   # Shared TypeScript configs
+├── config/settings/         # Django settings (base, local, production, test)
+├── my_project/              # Django modular monolith container
+│   └── users/               # User domain module (add more modules here)
+└── docker/                  # Docker configurations
+```
+
+## Template Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `use_drf` | yes | Django REST Framework with OpenAPI |
+| `use_celery` | yes | Celery + Redis task queue |
+| `use_async` | no | ASGI support with Uvicorn |
+| `use_sentry` | yes | Sentry error tracking |
+| `use_heroku` | no | Heroku deployment configuration |
+| `username_type` | username | Authentication type (username or email) |
+
+See [all options](https://cookiecutter-turbo-django.readthedocs.io/en/latest/1-getting-started/project-generation-options.html) in the documentation.
+
+## Acknowledgments
+
+This project builds upon the excellent work of [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django) and extends it with a modular monolith architecture and modern frontend tooling.
