@@ -15,7 +15,7 @@ class ExampleEvent(DomainEvent):
 
     def __init__(
         self,
-        id: str,
+        id: str, # noqa: A002
         created_at: datetime,
         message: str,
         product_dict: list[dict],
