@@ -1,0 +1,90 @@
+#!/usr/bin/env zsh
+
+# Git worktree creation and setup script
+# Usage: . bin/worktree-new <branch-name>
+# or: source bin/worktree-new <branch-name>
+
+# Validate argument
+if [[ -z "$1" ]]; then
+  echo "Error: Branch name required"
+  echo "Usage: . bin/worktree-new <branch-name>"
+  return 1
+fi
+
+BRANCH_NAME="$1"
+CURRENT_DIR="$(pwd)"
+CURRENT_DIR_NAME="$(basename "${CURRENT_DIR}")"
+WORKTREE_DIR="../${CURRENT_DIR_NAME}--${BRANCH_NAME}"
+
+echo "Creating git worktree for branch: ${BRANCH_NAME}"
+
+# Check if branch exists (locally or remotely)
+if git show-ref --verify --quiet "refs/heads/${BRANCH_NAME}" || \
+   git show-ref --verify --quiet "refs/remotes/origin/${BRANCH_NAME}"; then
+  # Branch exists, check it out
+  echo "Checking out existing branch"
+  if ! git worktree add "${WORKTREE_DIR}" "${BRANCH_NAME}"; then
+    echo "Failed to create git worktree"
+    return 1
+  fi
+else
+  # Branch doesn't exist, create it
+  echo "Creating new branch"
+  if ! git worktree add -b "${BRANCH_NAME}" "${WORKTREE_DIR}"; then
+    echo "Failed to create git worktree"
+    return 1
+  fi
+fi
+
+echo "Worktree created at ${WORKTREE_DIR}"
+
+# Files and directories to copy
+FILES_TO_COPY=(
+  ".env"
+  ".env.local"
+  ".envrc"
+  ".npmrc"
+)
+
+# Copy files if they exist
+echo "Copying configuration files..."
+for file in "${FILES_TO_COPY[@]}"; do
+  if [[ -f "${CURRENT_DIR}/${file}" ]]; then
+    cp "${CURRENT_DIR}/${file}" "${WORKTREE_DIR}/${file}"
+    echo "  Copied ${file}"
+  else
+    echo "  Skipped ${file} (not found)"
+  fi
+done
+
+# Copy .claude/settings.local.json if it exists
+if [[ -f "${CURRENT_DIR}/.claude/settings.local.json" ]]; then
+  mkdir -p "${WORKTREE_DIR}/.claude"
+  cp "${CURRENT_DIR}/.claude/settings.local.json" "${WORKTREE_DIR}/.claude/settings.local.json"
+  echo "  Copied .claude/settings.local.json"
+else
+  echo "  Skipped .claude/settings.local.json (not found)"
+fi
+
+# Change to new worktree directory
+cd "${WORKTREE_DIR}" || {
+  echo "Failed to cd to ${WORKTREE_DIR}"
+  return 1
+}
+
+# Allow direnv if available
+if command -v direnv &> /dev/null && [[ -f .envrc ]]; then
+  direnv allow
+fi
+
+echo "Running pnpm install..."
+if pnpm install; then
+  echo "Dependencies installed successfully"
+else
+  echo "pnpm install had issues (but continuing)"
+fi
+
+echo ""
+echo "Worktree setup complete!"
+echo "Current directory: $(pwd)"
+echo "Ready to launch Claude Code with: claude"

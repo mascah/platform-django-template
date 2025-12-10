@@ -58,6 +58,12 @@ This template provides more than boilerplate—it establishes **architectural pa
 
 .. toctree::
    :maxdepth: 2
+   :caption: AI Development
+
+   5-ai-development/claude-code
+
+.. toctree::
+   :maxdepth: 2
    :caption: About
 
    6-about/maintainer-guide

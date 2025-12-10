@@ -1,0 +1,102 @@
+#!/usr/bin/env zsh
+
+# Git worktree removal and cleanup script
+# Usage: . bin/worktree-remove
+# or: source bin/worktree-remove
+
+# Get current directory info
+CURRENT_DIR="$(pwd)"
+CURRENT_DIR_NAME="$(basename "${CURRENT_DIR}")"
+
+# Check if we're in a worktree (directory name should contain '--')
+if [[ ! "${CURRENT_DIR_NAME}" =~ -- ]]; then
+  echo "Error: Not in a worktree directory"
+  echo "   Current directory: ${CURRENT_DIR_NAME}"
+  echo "   Expected format: {repo}--{branch}"
+  echo ""
+  echo "   This script should be run from within a worktree created by bin/worktree-new"
+  return 1
+fi
+
+# Extract branch name from directory name (everything after '--')
+BRANCH_NAME="${CURRENT_DIR_NAME##*--}"
+
+# Read local Claude settings if they exist (before we navigate away)
+LOCAL_SETTINGS_FILE=".claude/settings.local.json"
+LOCAL_SETTINGS_CONTENT=""
+if [[ -f "${LOCAL_SETTINGS_FILE}" ]]; then
+  LOCAL_SETTINGS_CONTENT="$(cat "${LOCAL_SETTINGS_FILE}")"
+fi
+
+echo "Worktree Info"
+echo "   Directory: ${CURRENT_DIR_NAME}"
+echo "   Branch: ${BRANCH_NAME}"
+echo ""
+
+# Check for uncommitted changes
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "Warning: Uncommitted changes detected"
+  echo ""
+  git status --short
+  echo ""
+  echo "Cannot remove worktree with uncommitted changes"
+  echo "   Please commit or stash your changes first"
+  return 1
+fi
+
+echo "No uncommitted changes"
+echo ""
+
+# Prompt for confirmation
+echo "This will:"
+echo "   1. Remove the worktree directory: ${CURRENT_DIR}"
+echo "   2. Delete the branch: ${BRANCH_NAME}"
+echo ""
+read "REPLY?Are you sure you want to continue? (y/N) "
+echo ""
+
+if [[ ! "${REPLY}" =~ ^[Yy]$ ]]; then
+  echo "Aborted"
+  return 1
+fi
+
+# Display local Claude settings if they exist
+if [[ -n "${LOCAL_SETTINGS_CONTENT}" ]]; then
+  echo "Local Claude Code Settings (.claude/settings.local.json)"
+  echo "----------------------------------------------------------------"
+  echo "${LOCAL_SETTINGS_CONTENT}"
+  echo "----------------------------------------------------------------"
+  echo ""
+  echo "Tip: If you want to keep any of these settings (like command permissions),"
+  echo "   copy them to .claude/settings.json in the main repo before continuing."
+  echo ""
+  read "REPLY?Press Enter to continue with cleanup..."
+  echo ""
+fi
+
+# Remove the worktree
+echo "Removing worktree..."
+if ! git worktree remove "../${CURRENT_DIR_NAME}"; then
+  echo "Failed to remove worktree"
+  cd - > /dev/null
+  return 1
+fi
+
+echo "Worktree removed"
+
+# Return to previous directory
+echo ""
+echo "Returning to previous directory..."
+cd - > /dev/null
+
+# Delete the branch
+echo "Deleting branch: ${BRANCH_NAME}..."
+if git branch -D "${BRANCH_NAME}"; then
+  echo "Branch deleted"
+else
+  echo "Failed to delete branch (it may have already been deleted)"
+fi
+
+echo ""
+echo "Cleanup complete!"
+echo "Current directory: $(pwd)"
