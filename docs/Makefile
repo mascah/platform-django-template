@@ -20,7 +20,7 @@ clean:
 
 # Build and serve docs with live reload
 livehtml:
-	sphinx-autobuild -b html --port 9000 --watch . -c . $(SOURCEDIR) $(BUILDDIR)/html
+	uv run sphinx-autobuild -b html --port 9000 --watch . -c . $(SOURCEDIR) $(BUILDDIR)/html
 
 # Check all external links for integrity
 linkcheck:
