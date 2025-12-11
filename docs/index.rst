@@ -59,6 +59,7 @@ This template provides more than boilerplate—it establishes **architectural pa
    4-guides/testing
    4-guides/document
    4-guides/websocket
+   4-guides/langchain-langgraph-integration
 
 .. toctree::
    :maxdepth: 2
