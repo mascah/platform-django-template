@@ -38,6 +38,16 @@ repos:
     hooks:
       - id: pyproject-fmt
 
+  - repo: local
+    hooks:
+      - id: lint-generated-project
+        name: Lint Generated Project
+        entry: uv run python scripts/lint_generated_project.py
+        language: system
+        pass_filenames: false
+        files: ^(\{\{cookiecutter\.project_slug\}\}/|cookiecutter\.json|hooks/)
+        stages: [pre-commit]
+
 ci:
   autoupdate_schedule: weekly
   skip: []
