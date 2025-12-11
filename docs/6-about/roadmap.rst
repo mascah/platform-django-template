@@ -82,6 +82,47 @@ Developer Experience
 **cruft/copier for template updates**
     Tools for tracking template versions and applying upstream changes to generated projects.
 
+Infrastructure as Code
+----------------------
+
+**Terraform/Terragrunt scaffolding**
+    Pre-configured infrastructure templates for AWS deployment. See :doc:`/3-deployment/deployment-on-aws`.
+
+    - ``infrastructure/`` directory with Terragrunt structure
+    - VPC, RDS, ElastiCache, S3 module configurations
+    - Environment hierarchy (dev/staging/production)
+    - GitHub Actions workflow for ``terraform plan/apply``
+
+**ECS deployment module**
+    Terraform module for deploying Django + Celery on ECS Fargate.
+
+    - ECS cluster, task definitions, services
+    - ALB integration with health checks
+    - Auto-scaling policies
+    - Secrets Manager integration
+
+**EKS deployment module**
+    Terraform module for deploying on EKS with managed node groups.
+
+    - EKS cluster with IRSA configuration
+    - Kubernetes manifests or Kustomize overlays
+    - AWS Load Balancer Controller integration
+
+**Helm chart for Django app**
+    Kubernetes Helm chart for the generated Django application.
+
+    - Deployment, Service, Ingress templates
+    - Celery worker and beat deployments
+    - Values files for environment configuration
+    - Integration with External Secrets Operator
+
+**use_aws cookiecutter option**
+    Optional AWS infrastructure scaffolding during project generation.
+
+    - Generates ``infrastructure/`` directory
+    - Pre-configured for ECS or EKS based on selection
+    - GitHub Actions CI/CD workflow for AWS deployment
+
 Contributing
 ------------
 
