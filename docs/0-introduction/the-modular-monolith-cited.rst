@@ -116,7 +116,7 @@ The modular monolith gives you the best of both approaches.
 Modularity Without Distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You get clear boundaries and separation of concerns without the operational complexity of distributed systems. Modules communicate through well-defined interfaces, but those calls are in-process, not over the network.
+You get clear boundaries and separation of concerns without the operational complexity of distributed systems. Modules communicate through explicit interfaces, but those calls are in-process, not over the network.
 
 In practice, this means using an **in-memory event bus**: modules publish domain events when significant things happen, and other modules subscribe to react. The event bus is a simple pub-sub mechanism that routes events to registered handlers, all within the same process.
 

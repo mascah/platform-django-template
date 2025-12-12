@@ -3,17 +3,17 @@ AI-Driven Development with Claude Code
 
 .. index:: ai-development, claude-code, workflow, planning, worktrees
 
-This guide documents an AI-driven development workflow using `Claude Code <https://claude.ai/code>`_, Anthropic's CLI for Claude. The approach emphasizes planning, quality gates, and parallel development to maximize productivity while maintaining code quality.
+This guide documents an AI-driven development workflow using `Claude Code <https://claude.ai/code>`_, Anthropic's CLI for Claude. The approach emphasizes planning, quality gates, and parallel development to ship faster while maintaining code quality.
 
 Why Claude Code for Development
 -------------------------------
 
 Claude Code excels at research and planning compared to other AI development tools. While tools like Cursor are catching up, Claude Code provides superior capabilities for:
 
-- **Understanding codebases** — Deep exploration across files and dependencies
-- **Research and discovery** — Using tools to investigate problems thoroughly
-- **Producing accurate plans** — Detailed implementation strategies that need minimal adjustment
-- **Iterative refinement** — Conversations that build understanding over time
+- **Understanding codebases**: Deep exploration across files and dependencies
+- **Research and discovery**: Using tools to investigate problems thoroughly
+- **Producing accurate plans**: Detailed implementation strategies that need minimal adjustment
+- **Iterative refinement**: Conversations that build understanding over time
 
 This workflow separates **planning and discovery** from **implementation**. By treating these as distinct phases, you gain flexibility: plan on mobile, implement on your laptop, or queue up work for later.
 

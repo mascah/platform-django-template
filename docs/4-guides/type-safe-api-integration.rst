@@ -34,7 +34,7 @@ In ``config/settings/base.py``, drf-spectacular is configured as the default sch
         ),
         "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
         "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-        "DEFAULT_PAGINATION_CLASS": "myproject.core.pagination.DefaultPagination",
+        "DEFAULT_PAGINATION_CLASS": "{project_slug}.core.pagination.DefaultPagination",
     }
 
     SPECTACULAR_SETTINGS = {
@@ -71,9 +71,9 @@ drf-spectacular automatically generates schema from your serializers. No decorat
 
 .. code-block:: python
 
-    # myproject/tasks/api/serializers.py
+    # {project_slug}/tasks/api/serializers.py
     from rest_framework import serializers
-    from myproject.tasks.models import Task
+    from {project_slug}.tasks.models import Task
 
     class TaskSerializer(serializers.ModelSerializer):
         class Meta:
@@ -82,9 +82,9 @@ drf-spectacular automatically generates schema from your serializers. No decorat
             read_only_fields = ["id", "created_at"]
 
 
-    # myproject/tasks/api/views.py
+    # {project_slug}/tasks/api/views.py
     from rest_framework import viewsets
-    from myproject.tasks.models import Task
+    from {project_slug}.tasks.models import Task
     from .serializers import TaskSerializer
 
     class TaskViewSet(viewsets.ModelViewSet):
@@ -115,12 +115,12 @@ Each React app has an ``openapi-ts.config.ts`` configuration file:
 
 .. code-block:: typescript
 
-    // apps/myproject/openapi-ts.config.ts
+    // apps/{project_slug}/openapi-ts.config.ts
     import { defaultPlugins, defineConfig } from '@hey-api/openapi-ts';
 
     export default defineConfig({
       input: 'http://localhost:8000/api/schema',
-      output: 'src/services/myproject',
+      output: 'src/services/{project_slug}',
       plugins: [
         ...defaultPlugins,
         '@hey-api/client-fetch',
@@ -161,10 +161,10 @@ With Django running, generate the client:
 
 .. code-block:: bash
 
-    cd apps/myproject
+    cd apps/{project_slug}
     pnpm openapi-ts
 
-This creates several files in ``src/services/myproject/``:
+This creates several files in ``src/services/{project_slug}/``:
 
 - ``types.gen.ts`` - TypeScript interfaces for all API types
 - ``sdk.gen.ts`` - Low-level API functions
@@ -211,7 +211,7 @@ Configure the API client with your backend URL and CSRF handling:
 .. code-block:: typescript
 
     // src/lib/api-client.ts
-    import { client } from '@/services/myproject/client.gen';
+    import { client } from '@/services/{project_slug}/client.gen';
 
     // Set base URL based on environment
     const apiBaseUrl = import.meta.env.PROD
@@ -247,7 +247,7 @@ Using the generated hook directly:
 .. code-block:: tsx
 
     import { useQuery } from '@tanstack/react-query';
-    import { tasksListOptions } from '@/services/myproject/@tanstack/react-query.gen';
+    import { tasksListOptions } from '@/services/{project_slug}/@tanstack/react-query.gen';
 
     function TaskList() {
       const { data, isLoading, error } = useQuery(tasksListOptions());
@@ -273,7 +273,7 @@ For reusability and cleaner component code, wrap generated hooks in custom hooks
 
     // src/features/tasks/hooks/useTasks.ts
     import { useQuery } from '@tanstack/react-query';
-    import { tasksListOptions } from '@/services/myproject/@tanstack/react-query.gen';
+    import { tasksListOptions } from '@/services/{project_slug}/@tanstack/react-query.gen';
 
     interface UseTasksProps {
       search?: string;
@@ -332,7 +332,7 @@ For retrieving a single item by ID:
 
     // src/features/tasks/hooks/useTask.ts
     import { useQuery } from '@tanstack/react-query';
-    import { tasksRetrieveOptions } from '@/services/myproject/@tanstack/react-query.gen';
+    import { tasksRetrieveOptions } from '@/services/{project_slug}/@tanstack/react-query.gen';
 
     export const useTask = (id: number) => {
       return useQuery({
@@ -361,8 +361,8 @@ Create, update, and delete operations follow the same pattern:
       tasksDestroyMutation,
       tasksListQueryKey,
       tasksRetrieveQueryKey,
-    } from '@/services/myproject/@tanstack/react-query.gen';
-    import type { Task } from '@/services/myproject/types.gen';
+    } from '@/services/{project_slug}/@tanstack/react-query.gen';
+    import type { Task } from '@/services/{project_slug}/types.gen';
 
     export const useCreateTask = () => {
       const queryClient = useQueryClient();

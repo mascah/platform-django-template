@@ -20,7 +20,7 @@ Teams adopt microservices before they need them, inheriting all the operational 
 
     "The patterns that make sense for organizations orders of magnitude larger than yours, are often the exact opposite ones that'll make sense for you."
 
-Network failures, deployment choreography, data consistency across services—these challenges require dedicated infrastructure and platform teams that startups don't have.
+Network failures, deployment choreography, data consistency across services: these challenges require dedicated infrastructure and platform teams that startups don't have.
 
 Monoliths That Become Unmaintainable
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -29,7 +29,7 @@ Other teams start with a traditional monolith but without clear internal boundar
 
     "If your application's dependency graph looks like spaghetti, understanding the impact of changes is difficult."
 
-As the codebase grows, dependencies become tangled, changes in one area break others, and onboarding new developers takes weeks instead of days. The monolith becomes a liability—what some call a "Distributed Monolith" even before any services are extracted.
+As the codebase grows, dependencies become tangled, changes in one area break others, and onboarding new developers takes weeks instead of days. The monolith becomes a liability, what some call a "Distributed Monolith" even before any services are extracted.
 
 The Middle Path
 ^^^^^^^^^^^^^^^
@@ -38,7 +38,7 @@ There's a better approach: start with a **modular monolith**. ThoughtWorks descr
 
     "A set of modules with specific functionality, which can be independently developed and tested, while the entire application is deployed as a single unit."
 
-You get the operational simplicity of a single deployable unit with the organizational clarity of well defined domain boundaries. When (and if) you need to extract services, you have clean seams to work with.
+You get a single deployable unit with clear domain boundaries. When you need to extract services, you have clean seams to work with.
 
 What This Template Provides
 ---------------------------

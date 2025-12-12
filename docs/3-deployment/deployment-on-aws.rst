@@ -148,8 +148,8 @@ PostgreSQL on RDS matches your local Docker PostgreSQL setup:
 
       identifier = "${var.project}-${var.environment}"
       engine     = "postgres"
-      engine_version = "16"
-      family     = "postgres16"
+      engine_version = "18"
+      family     = "postgres18"
 
       instance_class    = var.environment == "production" ? "db.r6g.large" : "db.t4g.micro"
       allocated_storage = 20

@@ -3,9 +3,9 @@
 Welcome to Cookiecutter Turbo Django
 ====================================
 
-A battle-tested project template for building **modular monolith** Django applications with modern frontend tooling.
+A project template for building **modular monolith** Django applications with modern frontend tooling.
 
-This template provides more than boilerplate—it establishes **architectural patterns** that scale from early-stage startup to mature platform. The modular monolith approach gives you the operational simplicity of a single deployable unit with the organizational clarity of well-defined domain boundaries.
+This template establishes architectural patterns that work for small teams and large organizations. The modular monolith approach means deploying a single unit while keeping clear boundaries between domains.
 
 **New here?** Start with :doc:`0-introduction/why-this-template-cited` to understand the philosophy, or jump to :ref:`template-options` if you're ready to generate a project.
 
@@ -47,6 +47,7 @@ This template provides more than boilerplate—it establishes **architectural pa
 
    4-guides/adding-modules
    4-guides/django-admin-operator-panel
+   4-guides/authentication
    4-guides/module-boundary-enforcement
    4-guides/service-layer-patterns
    4-guides/api-development
@@ -54,10 +55,13 @@ This template provides more than boilerplate—it establishes **architectural pa
    4-guides/event-driven-architecture
    4-guides/production-patterns
    4-guides/observability-logging
+   4-guides/model-auditing-history
    4-guides/product-analytics
    4-guides/multi-tenancy-organizations
    4-guides/code-quality
    4-guides/testing
+   4-guides/e2e-testing-playwright
+   4-guides/data-ingestion-integration
    4-guides/document
    4-guides/websocket
    4-guides/langchain-langgraph-integration
@@ -74,6 +78,7 @@ This template provides more than boilerplate—it establishes **architectural pa
 
    6-about/maintainer-guide
    6-about/roadmap
+   6-about/rust-faq
 
 Indices and tables
 ------------------

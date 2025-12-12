@@ -54,7 +54,7 @@ Each module is a standard Django app with:
 - ``services.py`` - Business logic (recommended, see :doc:`/4-guides/service-layer-patterns`)
 - ``tests/`` - Module-specific tests
 
-Modules should be cohesive—everything related to a domain concept lives together.
+Modules should be cohesive: everything related to a domain concept lives together.
 
 Shared Infrastructure
 ^^^^^^^^^^^^^^^^^^^^^
@@ -86,7 +86,7 @@ The pattern works like this:
 
     transaction.on_commit(_publish_event)  # Only publish after commit!
 
-The critical detail is ``transaction.on_commit()``—events are only published after the database transaction commits successfully. This prevents handlers from processing events for data that might roll back.
+The critical detail is ``transaction.on_commit()``: events are only published after the database transaction commits successfully. This prevents handlers from processing events for data that might roll back.
 
 Handlers are registered during app startup in ``AppConfig.ready()``, ensuring loose coupling between modules:
 

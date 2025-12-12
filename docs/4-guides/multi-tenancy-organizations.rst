@@ -10,8 +10,8 @@ In B2B SaaS applications, **multi-tenancy** allows a single deployment to serve 
 
 This guide uses the **shared database with org_id** approach: all organizations' data lives in the same database tables, distinguished by foreign keys. This provides:
 
-- **Operational simplicity**: Single database to backup, monitor, and maintain
-- **Natural Django integration**: Works seamlessly with the ORM and migrations
+- **Simpler operations**: Single database to backup, monitor, and maintain
+- **Natural Django integration**: Works with the ORM and migrations
 - **Cross-tenant analytics**: Easy to run reports across all tenants when needed
 - **Cost efficiency**: No per-tenant database overhead
 
@@ -32,9 +32,8 @@ Creating the App
 
 .. code-block:: bash
 
-    # Inside your project directory
-    cd {project_slug}
-    python ../manage.py startapp organizations
+    # From the project root directory
+    python manage.py startapp organizations {project_slug}/organizations
 
 Your directory structure should look like:
 

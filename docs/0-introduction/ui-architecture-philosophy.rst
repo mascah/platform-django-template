@@ -1,7 +1,7 @@
 UI Architecture Philosophy
 ==========================
 
-This template provides a pragmatic, multi-tier approach to building user interfaces. Rather than forcing a single frontend paradigm, it gives you **the right tool for each job**—from dead-simple Django templates to fully interactive React applications.
+This template takes a pragmatic, multi-tier approach to building user interfaces. Rather than forcing a single frontend paradigm, it offers a choice of tools: from simple Django templates to fully interactive React applications.
 
 The Core Principle
 ------------------
@@ -22,7 +22,7 @@ For admin dashboards, forms, settings pages, and rapid prototyping, Django templ
 django-tailwind-cli
 ^^^^^^^^^^^^^^^^^^^
 
-This template includes `django-tailwind-cli`_ for Tailwind CSS integration **without webpack, Node.js in production, or complex build pipelines**. The Tailwind binary runs directly—no npm required.
+This template includes `django-tailwind-cli`_ for Tailwind CSS integration **without webpack, Node.js in production, or complex build pipelines**. The Tailwind binary runs directly. No npm required.
 
 In development, a sidecar container watches for changes:
 
@@ -41,7 +41,7 @@ For production, the custom ``collectstatic`` command automatically builds your C
 Alpine.js for Interactivity
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you need interactive behavior—dropdowns, modals, form validation—without a full JavaScript framework, `Alpine.js`_ is the recommended addition. Add it via CDN when needed:
+When you need interactive behavior (dropdowns, modals, form validation) without a full JavaScript framework, `Alpine.js`_ is the recommended addition. Add it via CDN when needed:
 
 .. code-block:: html+jinja
 
@@ -52,23 +52,23 @@ When you need interactive behavior—dropdowns, modals, form validation—withou
       <div x-show="open">Content here</div>
     </div>
 
-Alpine.js is intentionally not included by default—add it when your page needs it. This keeps simple pages simple.
+Alpine.js is intentionally not included by default. Add it when your page needs it. This keeps simple pages simple.
 
 **Best for**: Admin interfaces, settings pages, forms, server-rendered content, rapid prototyping.
 
 Tier 2: Vite-Based SPAs (Interactive)
 -------------------------------------
 
-When you need rich client-side interactivity—complex state management, real-time updates, data visualizations—reach for a proper frontend framework.
+When you need rich client-side interactivity (complex state management, real-time updates, data visualizations), reach for a proper frontend framework.
 
 django-vite Integration
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-The template uses `django-vite`_ to bridge Django and Vite based frontends. This gives you:
+The template uses `django-vite`_ to bridge Django and Vite based frontends:
 
 - **Hot Module Replacement** in development
 - **Manifest-based asset versioning** in production
-- **Seamless Django template integration**
+- **Django template integration**
 
 The Django template bootstraps your SPA:
 

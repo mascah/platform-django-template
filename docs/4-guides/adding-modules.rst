@@ -6,7 +6,7 @@ This guide explains how to add new modules (Django apps) to your modular monolit
 Overview
 --------
 
-In the modular monolith pattern, your application is organized into **modules**—self-contained Django apps that encapsulate specific business domains. Unlike microservices, these modules run in the same process and share a database, but they maintain clear boundaries through well-defined interfaces.
+In the modular monolith pattern, your application is organized into **modules**: self-contained Django apps that encapsulate specific business domains. Unlike microservices, these modules run in the same process and share a database, but they maintain clear boundaries through explicit interfaces.
 
 For background on why we use this architecture, see :doc:`/0-introduction/the-modular-monolith-cited`.
 
@@ -126,7 +126,7 @@ Best Practices
 
 **Module communication:**
 
-Modules should communicate through well-defined interfaces rather than direct imports:
+Modules should communicate through explicit interfaces rather than direct imports:
 
 - Use **domain events** for loose coupling between modules (see :doc:`event-driven-architecture`)
 - Import only from a module's public interface, not internal implementation details

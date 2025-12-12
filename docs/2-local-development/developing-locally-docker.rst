@@ -29,7 +29,7 @@ This can take a while, especially the first time you run this particular command
 
     docker compose -f docker-compose.local.yml build
 
-Generally, if you want to emulate production environment use ``docker-compose.production.yml`` instead. And this is true for any other actions you might need to perform: whenever a switch is required, just do it!
+For production deployments, see the deployment guides (:doc:`/3-deployment/deployment-on-heroku` or :doc:`/3-deployment/deployment-on-aws`) which use different deployment mechanisms rather than Docker Compose.
 
 After we have created our initial image we need to generate a lockfile for our dependencies.
 Docker cannot write to the host system during builds, so we have to run the command to generate the lockfile in the container.
@@ -252,7 +252,7 @@ Prerequisites:
 
 * ``use_celery`` was set to ``y`` on project initialization.
 
-By default, it's enabled both in local and production environments (``docker-compose.local.yml`` and ``docker-compose.production.yml`` Docker Compose configs, respectively) through a ``flower`` service. For added security, ``flower`` requires its clients to provide authentication credentials specified in the ``.env`` file as ``CELERY_FLOWER_USER`` and ``CELERY_FLOWER_PASSWORD`` environment variables. Check out ``localhost:5555`` and see for yourself.
+By default, it's enabled in local development (``docker-compose.local.yml``) through a ``flower`` service. For added security, ``flower`` requires its clients to provide authentication credentials specified in the ``.env`` file as ``CELERY_FLOWER_USER`` and ``CELERY_FLOWER_PASSWORD`` environment variables. Check out ``localhost:5555`` and see for yourself.
 
 .. _`Flower`: https://github.com/mher/flower
 

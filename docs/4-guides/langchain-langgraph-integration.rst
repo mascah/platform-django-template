@@ -517,12 +517,28 @@ Run LLM tasks asynchronously for better user experience:
 With Event Bus
 ^^^^^^^^^^^^^^
 
-Publish events from agent actions for cross-module communication:
+Publish events from agent actions for cross-module communication. First, define the event class (see :doc:`event-driven-architecture` for the full pattern):
+
+.. code-block:: python
+
+    # {project_slug}/domain_events/events.py
+    from {project_slug}.domain_events.base import DomainEvent
+
+
+    class FeedbackAnalyzedEvent(DomainEvent):
+        """Emitted when AI analyzes customer feedback."""
+
+        def __init__(self, feedback_id: int, sentiment: str):
+            self.feedback_id = feedback_id
+            self.sentiment = sentiment
+
+Then publish the event from your service:
 
 .. code-block:: python
 
     # {project_slug}/ai/services.py
-    from {project_slug}.core.event_bus import publish
+    from {project_slug}.domain_events.bus import event_bus
+    from {project_slug}.domain_events.events import FeedbackAnalyzedEvent
 
     def analyze_feedback(*, feedback_id: int) -> dict:
         """Analyze customer feedback using LLM."""
@@ -535,10 +551,10 @@ Publish events from agent actions for cross-module communication:
         )
 
         # Publish event for other modules
-        publish("feedback.analyzed", {
-            "feedback_id": feedback_id,
-            "sentiment": sentiment,
-        })
+        event_bus.publish(FeedbackAnalyzedEvent(
+            feedback_id=feedback_id,
+            sentiment=sentiment,
+        ))
 
         return {"sentiment": sentiment}
 

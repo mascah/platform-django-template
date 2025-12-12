@@ -18,7 +18,7 @@ The template's ``use_drf`` option enables Django REST Framework with drf-spectac
 Django REST Framework (Default)
 -------------------------------
 
-DRF is the template's default choice for good reasons: it's battle-tested, has the largest ecosystem, and integrates seamlessly with Django's authentication and ORM.
+DRF is the template's default choice because it's mature, has the largest ecosystem, and integrates directly with Django's authentication and ORM.
 
 Why DRF
 ^^^^^^^
