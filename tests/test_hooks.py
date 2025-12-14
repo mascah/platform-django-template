@@ -1,11 +1,11 @@
-"""Unit tests for the hooks"""
+"""Unit tests for the post-generation scripts"""
 
 import os
 from pathlib import Path
 
 import pytest
 
-from hooks.post_gen_project import append_to_gitignore_file
+from scripts.post_generation import append_to_gitignore_file
 
 
 @pytest.fixture

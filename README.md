@@ -1,4 +1,4 @@
-# Cookiecutter Turbo Django
+# Copier Turbo Django
 
 [![Build Status](https://github.com/mascah/cookiecutter-turbo-django/actions/workflows/ci.yml/badge.svg)](https://github.com/mascah/cookiecutter-turbo-django/actions)
 [![Documentation Status](https://readthedocs.org/projects/cookiecutter-turbo-django/badge/?version=latest)](https://cookiecutter-turbo-django.readthedocs.io/)
@@ -6,7 +6,7 @@
 [![Django 5.2](https://img.shields.io/badge/django-5.2-green.svg)](https://www.djangoproject.com/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-A [Cookiecutter](https://github.com/cookiecutter/cookiecutter) template for building production-ready **modular monolith** Django applications with modern frontend tooling. Get the operational simplicity of a single deployable unit with the organizational clarity of well-defined domain boundaries.
+A [Copier](https://copier.readthedocs.io/) template for building production-ready **modular monolith** Django applications with modern frontend tooling. Get the operational simplicity of a single deployable unit with the organizational clarity of well-defined domain boundaries.
 
 Heavily inspired by [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django).
 
@@ -18,17 +18,27 @@ Heavily inspired by [cookiecutter-django](https://github.com/cookiecutter/cookie
 - **Docker-first development** - PostgreSQL, Redis, and all services containerized
 - **Production-ready defaults** - Sentry, structured logging, type checking with mypy
 - **Optional integrations** - Django REST Framework with OpenAPI, Celery task queue, async/ASGI support, Heroku deployment
+- **Template updates** - Copier can update existing projects to newer template versions
 
 ## Quick Start
 
 ```bash
-# Install cookiecutter
-pip install cookiecutter
+# Install copier
+pip install copier
 
 # Generate your project
-cookiecutter gh:mascah/cookiecutter-turbo-django
+copier copy gh:mascah/cookiecutter-turbo-django my_project --trust
 
 # Follow the prompts, then see your generated project's README
+```
+
+### Updating an Existing Project
+
+One of Copier's key advantages is the ability to update existing projects:
+
+```bash
+cd my_project
+copier update --trust
 ```
 
 ## Documentation
@@ -61,11 +71,11 @@ my_project/
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `use_drf` | yes | Django REST Framework with OpenAPI |
-| `use_celery` | yes | Celery + Redis task queue |
-| `use_async` | no | ASGI support with Uvicorn |
-| `use_sentry` | yes | Sentry error tracking |
-| `use_heroku` | no | Heroku deployment configuration |
+| `use_drf` | true | Django REST Framework with OpenAPI |
+| `use_celery` | true | Celery + Redis task queue |
+| `use_async` | false | ASGI support with Uvicorn |
+| `use_sentry` | true | Sentry error tracking |
+| `use_heroku` | false | Heroku deployment configuration |
 | `username_type` | username | Authentication type (username or email) |
 
 See [all options](https://cookiecutter-turbo-django.readthedocs.io/en/latest/1-getting-started/project-generation-options.html) in the documentation.

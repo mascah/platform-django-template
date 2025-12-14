@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Cookiecutter template for creating production-ready Django + Turborepo monorepos. Generated projects combine a Django backend with modern frontend apps (React/Astro) using pnpm workspaces.
+This is a Copier template for creating production-ready Django + Turborepo monorepos. Generated projects combine a Django backend with modern frontend apps (React/Astro) using pnpm workspaces.
 
 ## Development Commands
 
@@ -25,10 +25,10 @@ AUTOFIXABLE_STYLES=1 uv run pytest tests
 
 # Test Docker builds
 sh tests/test_docker.sh                    # Basic config
-sh tests/test_docker.sh use_celery=y       # With Celery
+sh tests/test_docker.sh use_celery=true    # With Celery
 
 # Generate a test project
-uv run cookiecutter . --no-input
+uv run copier copy . my_project --trust
 ```
 
 ### Pre-commit Hooks
@@ -44,10 +44,10 @@ uv run pre-commit run --all-files
 ### Template Structure
 
 ```
-hooks/                      # Cookiecutter hooks (pre/post generation)
-scripts/                    # Version sync utilities
+copier.yaml                 # Copier configuration (variables, validators, excludes)
+scripts/                    # Post-generation scripts and version sync utilities
 tests/                      # Template generation tests
-{{cookiecutter.project_slug}}/  # Generated project template
+template/                   # Generated project template files
 ```
 
 ### Generated Project Structure
@@ -71,19 +71,17 @@ docker/                        # Docker configurations
 
 The `{project_slug}/` directory is the modular monolith container. Each subdirectory (like `users/`) is a Django app. Add new Django apps as sibling directories to `users/`.
 
-### Key Configuration Options (cookiecutter.json)
+### Key Configuration Options (copier.yaml)
 
-- `use_drf`: Django REST Framework with OpenAPI (default: yes)
-- `use_celery`: Celery + Redis task queue (default: no)
-- `use_async`: ASGI support (default: no)
-- `use_heroku`: Heroku deployment (default: no)
+- `use_drf`: Django REST Framework with OpenAPI (default: true)
+- `use_celery`: Celery + Redis task queue (default: true)
+- `use_async`: ASGI support (default: false)
+- `use_heroku`: Heroku deployment (default: false)
 - `username_type`: "username" or "email" authentication
 
-### Hooks Behavior
+### Post-Generation Tasks
 
-**pre_gen_project.py**: Validates project_slug (lowercase, valid Python identifier), author_name, and Heroku+Whitenoise requirement.
-
-**post_gen_project.py**: Removes unused files based on options, generates random secrets in `.env`, installs Python deps via Docker uv, installs frontend deps via pnpm.
+**scripts/post_generation.py**: Generates random secrets in `.env`, sets Django secret keys in settings files, installs Python deps via Docker uv, installs frontend deps via pnpm.
 
 ## Testing
 
@@ -91,10 +89,10 @@ Tests validate template generation across option combinations. Tests run on Ubun
 
 ```bash
 # Run specific test
-uv run pytest tests/test_cookiecutter_generation.py::test_project_generation -k "defaults"
+uv run pytest tests/test_copier_generation.py::test_project_generation -k "defaults"
 
 # Run with verbose output
-uv run pytest -v tests/test_cookiecutter_generation.py
+uv run pytest -v tests/test_copier_generation.py
 ```
 
 ## Tech Stack

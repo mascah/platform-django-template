@@ -1,0 +1,186 @@
+# Copier configuration for Turbo Django template
+# Migration from cookiecutter.json
+
+_min_copier_version: "9.0.0"
+
+# Template subdirectory (the actual template files)
+_subdirectory: template
+
+# Jinja extensions for {% now %} tag in LICENSE files
+_jinja_extensions:
+  - jinja2_time.TimeExtension
+
+# Files/directories to skip rendering (equivalent to _copy_without_render)
+# These contain Jinja-like syntax that shouldn't be processed
+_skip_if_exists:
+  - turbo/generators/**/*
+  - packages/**/*
+
+# Conditional file exclusions (replaces post_gen_project.py file removal logic)
+_exclude:
+  # License files
+  - "{% if open_source_license == 'Not open source' %}LICENSE{% endif %}"
+  - "{% if open_source_license == 'Not open source' %}CONTRIBUTORS.txt{% endif %}"
+  - "{% if open_source_license != 'GPLv3' %}COPYING{% endif %}"
+
+  # Celery files
+  - "{% if not use_celery %}config/celery_app.py{% endif %}"
+  - "{% if not use_celery %}{{ project_slug }}/users/tasks.py{% endif %}"
+  - "{% if not use_celery %}{{ project_slug }}/users/tests/test_tasks.py{% endif %}"
+  - "{% if not use_celery %}docker/local/django/celery{% endif %}"
+  - "{% if not use_celery %}docker/production/django/celery{% endif %}"
+
+  # DRF files
+  - "{% if not use_drf %}config/api_router.py{% endif %}"
+  - "{% if not use_drf %}{{ project_slug }}/users/api{% endif %}"
+  - "{% if not use_drf %}{{ project_slug }}/users/tests/api{% endif %}"
+  - "{% if not use_drf %}apps/{{ project_slug }}/openapi-ts.config.ts{% endif %}"
+
+  # Async files
+  - "{% if not use_async %}config/asgi.py{% endif %}"
+  - "{% if not use_async %}config/websocket.py{% endif %}"
+
+  # Heroku files
+  - "{% if not use_heroku %}Procfile{% endif %}"
+  - "{% if not use_heroku %}bin{% endif %}"
+
+  # Username type - email type keeps managers, username type removes them
+  - "{% if username_type == 'username' %}{{ project_slug }}/users/managers.py{% endif %}"
+  - "{% if username_type == 'username' %}{{ project_slug }}/users/tests/test_managers.py{% endif %}"
+
+# Post-generation tasks
+_tasks:
+  - command: python {{ _copier_conf.src_path }}/scripts/post_generation.py
+    when: "{{ not _copier_conf.unsafe }}"
+
+# =============================================================================
+# Project Variables
+# =============================================================================
+
+project_name:
+  type: str
+  help: "Human-readable project name"
+  default: "Turbo Django"
+
+project_slug:
+  type: str
+  help: "Project slug (used for Python package name and directories)"
+  default: "{{ project_name | lower | replace(' ', '_') | replace('-', '_') | replace('.', '_') | trim }}"
+  validator: >-
+    {% if not project_slug.isidentifier() %}
+    '{{ project_slug }}' is not a valid Python identifier
+    {% elif project_slug != project_slug.lower() %}
+    '{{ project_slug }}' must be all lowercase
+    {% endif %}
+
+description:
+  type: str
+  help: "Brief project description"
+  default: "This is the way."
+
+author_name:
+  type: str
+  help: "Author name"
+  default: "Mike Ascah"
+  validator: >-
+    {% if '\\' in author_name %}
+    Author name cannot contain backslashes
+    {% endif %}
+
+domain_name:
+  type: str
+  help: "Domain name for the project"
+  default: "example.com"
+
+email:
+  type: str
+  help: "Contact email"
+  default: "{{ author_name | lower | trim | replace(' ', '-') }}@{{ domain_name | lower | trim }}"
+
+version:
+  type: str
+  help: "Initial project version"
+  default: "0.1.0"
+
+open_source_license:
+  type: str
+  help: "Open source license"
+  choices:
+    - MIT
+    - BSD
+    - GPLv3
+    - Apache Software License 2.0
+    - Not open source
+  default: MIT
+
+username_type:
+  type: str
+  help: "User authentication type"
+  choices:
+    - username
+    - email
+  default: username
+
+timezone:
+  type: str
+  help: "Default timezone"
+  default: "UTC"
+
+mail_service:
+  type: str
+  help: "Email service provider"
+  choices:
+    - Mailgun
+    - Amazon SES
+    - Sendgrid
+    - Other SMTP
+  default: Mailgun
+
+use_drf:
+  type: bool
+  help: "Use Django REST Framework with OpenAPI?"
+  default: true
+
+use_async:
+  type: bool
+  help: "Use ASGI (async support)?"
+  default: false
+
+use_celery:
+  type: bool
+  help: "Use Celery for background tasks?"
+  default: true
+
+use_mailpit:
+  type: bool
+  help: "Use Mailpit for local email testing?"
+  default: true
+
+use_sentry:
+  type: bool
+  help: "Use Sentry for error tracking?"
+  default: true
+
+use_whitenoise:
+  type: bool
+  help: "Use WhiteNoise for static files?"
+  default: true
+
+use_heroku:
+  type: bool
+  help: "Configure for Heroku deployment?"
+  default: false
+  validator: >-
+    {% if use_heroku and not use_whitenoise %}
+    Heroku deployment requires WhiteNoise for serving static files
+    {% endif %}
+
+keep_local_envs_in_vcs:
+  type: bool
+  help: "Keep .env.example in version control?"
+  default: false
+
+debug:
+  type: bool
+  help: "Enable debug mode (uses 'debug' for secrets instead of random values)?"
+  default: false
