@@ -17,37 +17,37 @@ _skip_if_exists:
   - packages/**/*
 
 # Conditional file exclusions (replaces post_gen_project.py file removal logic)
-# Note: paths match source files which have .jinja suffix for template files
+# Note: paths match DESTINATION paths (without .jinja suffix)
 _exclude:
   # License files
-  - "{% if open_source_license == 'Not open source' %}LICENSE.jinja{% endif %}"
-  - "{% if open_source_license == 'Not open source' %}CONTRIBUTORS.txt.jinja{% endif %}"
+  - "{% if open_source_license == 'Not open source' %}LICENSE{% endif %}"
+  - "{% if open_source_license == 'Not open source' %}CONTRIBUTORS.txt{% endif %}"
   - "{% if open_source_license != 'GPLv3' %}COPYING{% endif %}"
 
   # Celery files
-  - "{% if not use_celery %}config/celery_app.py.jinja{% endif %}"
+  - "{% if not use_celery %}config/celery_app.py{% endif %}"
   - "{% if not use_celery %}{{ project_slug }}/users/tasks.py{% endif %}"
-  - "{% if not use_celery %}{{ project_slug }}/users/tests/test_tasks.py.jinja{% endif %}"
+  - "{% if not use_celery %}{{ project_slug }}/users/tests/test_tasks.py{% endif %}"
   - "{% if not use_celery %}docker/local/django/celery{% endif %}"
   - "{% if not use_celery %}docker/production/django/celery{% endif %}"
 
   # DRF files
-  - "{% if not use_drf %}config/api_router.py.jinja{% endif %}"
+  - "{% if not use_drf %}config/api_router.py{% endif %}"
   - "{% if not use_drf %}{{ project_slug }}/users/api{% endif %}"
   - "{% if not use_drf %}{{ project_slug }}/users/tests/api{% endif %}"
-  - "{% if not use_drf %}apps/{{ project_slug }}/openapi-ts.config.ts.jinja{% endif %}"
+  - "{% if not use_drf %}apps/{{ project_slug }}/openapi-ts.config.ts{% endif %}"
 
   # Async files
-  - "{% if not use_async %}config/asgi.py.jinja{% endif %}"
+  - "{% if not use_async %}config/asgi.py{% endif %}"
   - "{% if not use_async %}config/websocket.py{% endif %}"
 
   # Heroku files
-  - "{% if not use_heroku %}Procfile.jinja{% endif %}"
+  - "{% if not use_heroku %}Procfile{% endif %}"
   - "{% if not use_heroku %}bin{% endif %}"
 
   # Username type - email type keeps managers, username type removes them
   - "{% if username_type == 'username' %}{{ project_slug }}/users/managers.py{% endif %}"
-  - "{% if username_type == 'username' %}{{ project_slug }}/users/tests/test_managers.py.jinja{% endif %}"
+  - "{% if username_type == 'username' %}{{ project_slug }}/users/tests/test_managers.py{% endif %}"
 
 # Post-generation tasks
 _tasks:
