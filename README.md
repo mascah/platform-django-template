@@ -23,11 +23,11 @@ Heavily inspired by [cookiecutter-django](https://github.com/cookiecutter/cookie
 ## Quick Start
 
 ```bash
-# Install copier
-pip install copier
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Generate your project
-copier copy gh:mascah/platform-django-template my_project --trust
+# Generate your project using uvx (runs copier without installing)
+uvx copier copy gh:mascah/platform-django-template my_project --trust
 
 # Follow the prompts, then see your generated project's README
 ```
@@ -38,7 +38,7 @@ One of Copier's key advantages is the ability to update existing projects:
 
 ```bash
 cd my_project
-copier update --trust
+uvx copier update --trust
 ```
 
 ## Documentation
