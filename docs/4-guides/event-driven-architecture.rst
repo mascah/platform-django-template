@@ -6,7 +6,7 @@ Use domain events to decouple modules in your modular monolith. Modules publish 
 Overview
 --------
 
-In a modular monolith, modules need to communicate without creating tight dependencies. Direct imports between modules lead to the "spaghetti dependencies" that make monoliths unmaintainable.
+In a modular monolith, modules need to communicate without creating tight dependencies. Direct imports between modules lead to tangled dependency graphs that make the codebase hard to maintain.
 
 The solution: modules publish events when something happens, and other modules subscribe to react. This provides:
 
@@ -442,35 +442,14 @@ Because your events are explicit classes with clear contracts, migration is stra
 
 Your **event contracts and handler logic stay the same**. Only the transport changes. Build with clear boundaries from day one, and extraction becomes straightforward.
 
-Event Sourcing (and Why We Don't Use It)
-----------------------------------------
+Event Sourcing vs Event-Driven Architecture
+--------------------------------------------
 
-When developers hear "event-driven architecture," many think of **event sourcing**. Here's what it actually is and why you probably don't need it.
+These terms are often confused, but they're different approaches.
 
-What Event Sourcing Actually Is
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**Event-driven architecture** (what this guide covers) uses events for **communication between modules**. Your database tables remain the source of truth. Events are notifications that something happened.
 
-Event sourcing is a fundamentally different way of storing data:
-
-- **Traditional approach**: Store current state. An ``Order`` table has columns for ``status``, ``total``, ``updated_at``. When state changes, you update the row.
-- **Event sourcing**: Store events as the source of truth. Instead of an ``Order`` row, you store ``OrderPlaced``, ``ItemAdded``, ``PaymentReceived``, ``OrderShipped``. Current state is derived by replaying events.
-
-.. code-block:: python
-
-    # Traditional: Store current state
-    order.status = "shipped"
-    order.save()
-
-    # Event sourcing: Append event, derive state
-    event_store.append(OrderShippedEvent(order_id=order.id, shipped_at=now))
-    # Current state = replay all events for this order
-
-In event sourcing, **events are the database**. You don't have a separate ``Order`` table. You reconstruct order state by replaying its event stream.
-
-What We're Doing Is Different
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The event-driven architecture in this guide is **not** event sourcing. We use events for **communication between modules**, not as the source of truth:
+**Event sourcing** stores events as the **source of truth itself**. Instead of an ``Orders`` table, you store ``OrderPlaced``, ``ItemAdded``, ``OrderShipped`` events and reconstruct current state by replaying them.
 
 +---------------------------+----------------------------------+----------------------------------+
 | Aspect                    | Event-Driven (This Guide)        | Event Sourcing                   |
@@ -481,8 +460,6 @@ The event-driven architecture in this guide is **not** event sourcing. We use ev
 +---------------------------+----------------------------------+----------------------------------+
 | State reconstruction      | Query the database               | Replay event stream              |
 +---------------------------+----------------------------------+----------------------------------+
-| Can delete events?        | Yes (they're just notifications) | No (you'd lose history)          |
-+---------------------------+----------------------------------+----------------------------------+
 | Complexity                | Low to moderate                  | High                             |
 +---------------------------+----------------------------------+----------------------------------+
 
@@ -492,82 +469,33 @@ With our approach:
 2. You publish an event to notify other modules (``PrescriptionRequestApprovedEvent``)
 3. The database remains the source of truth
 
-You get decoupling without the complexity of event sourcing.
+You get module decoupling without the complexity of event sourcing.
 
-Why Event Sourcing Is Often Misunderstood
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+When Event Sourcing Makes Sense
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Common misconceptions:
+Event sourcing is valuable for specific scenarios:
 
-**"We're doing event sourcing because we publish events"**
+- **Audit-critical domains**: Financial systems, healthcare records where you must prove exactly what happened and when
+- **Complex temporal logic**: When business rules depend heavily on the sequence of events
+- **Event-native domains**: Trading systems, IoT sensor streams where events are the natural model
 
-Publishing events doesn't make you event-sourced. If your database tables are the source of truth and events are notifications, that's event-driven architecture—and that's probably what you want.
+The trade-off is complexity: event versioning, snapshot management, eventual consistency, and the inability to query current state directly (you need read models/CQRS).
 
-**"Event sourcing gives us an audit log"**
+Common Questions
+^^^^^^^^^^^^^^^^
 
-You can have a complete audit log without event sourcing. Store audit records alongside your regular data. Event sourcing is about deriving state from events, not about having history.
+**"Do I need event sourcing for an audit trail?"**
 
-**"Event sourcing is more scalable"**
+No. Add an audit log table alongside your regular data. Django packages like ``django-auditlog`` or ``django-simple-history`` handle this well.
 
-Event sourcing introduces significant complexity: event versioning, snapshot management, eventual consistency, complex queries (you can't just ``SELECT * FROM orders WHERE status = 'pending'``). For most applications, a well-indexed relational database scales better with far less complexity.
+**"Do I need event sourcing to notify other systems?"**
 
-**"We might need to replay events someday"**
+No. That's event-driven architecture—exactly what this guide covers.
 
-If you need to rebuild a read model or audit history, you can implement that specifically. You don't need to restructure your entire data model around event streams.
+**"What if I need event sourcing later?"**
 
-When Event Sourcing Actually Makes Sense
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Event sourcing is valuable in specific scenarios:
-
-- **Audit-critical domains**: Financial systems, healthcare records, legal documents where you must prove exactly what happened and when
-- **Complex domain logic**: When business rules depend heavily on the sequence of events, not just current state
-- **Time-travel requirements**: Systems that need to answer "what was the state at time X?" frequently
-- **Event-native domains**: Systems where events are the natural model (trading systems, IoT sensor streams)
-
-Even then, consider applying event sourcing to **specific aggregates**, not your entire system.
-
-The Complexity You're Signing Up For
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If you choose event sourcing, be prepared for:
-
-- **Event versioning**: What happens when ``OrderPlacedEvent`` v1 needs a new field? You need migration strategies.
-- **Snapshots**: Replaying thousands of events is slow. You'll need snapshot strategies.
-- **Querying**: "Show me all pending orders" requires either a read model (CQRS) or scanning event streams.
-- **Eventual consistency**: Read models lag behind writes. Your UI must handle this.
-- **Tooling**: Django's ORM doesn't support this pattern. You'll need specialized libraries or custom infrastructure.
-
-What to Do Instead
-^^^^^^^^^^^^^^^^^^
-
-If someone says "I want event sourcing," ask what problem they're actually solving:
-
-**"I need an audit trail"**
-    Add an audit log table. Store who changed what and when. Django packages like ``django-auditlog`` or ``django-simple-history`` do this trivially.
-
-**"I need to notify other systems when things change"**
-    That's event-driven architecture—exactly what this guide covers. Publish domain events, let other modules react.
-
-**"I need to rebuild read models"**
-    Store events in an append-only log alongside your regular data. Replay when needed. You don't need full event sourcing.
-
-**"I need to know the state at a point in time"**
-    Add ``created_at``, ``updated_at``, and consider temporal tables or a history table pattern.
-
-**"I've read that event sourcing is best practice"**
-    It's a tool for specific problems. Most successful systems use traditional state-based persistence with event-driven communication between components.
-
-If You Ever Need Event Sourcing
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The patterns here position you well:
-
-1. Your **domain events are already explicit classes** with clear contracts
-2. Your **modules are decoupled** and communicate via events
-3. You can **introduce event sourcing to specific aggregates** without rewriting everything
-
-Start with event-driven architecture. Add event sourcing to specific aggregates only when the problem demands it.
+The patterns here position you well. Your domain events are already explicit classes with clear contracts, and your modules communicate through events. You can introduce event sourcing to specific aggregates without rewriting everything.
 
 Summary
 -------
